@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express.js Frontend</title>
+</head>
+
+<body>
+    <form id="myForm">
+        <!-- Input Field -->
+        <label for="inputField">Enter something:</label>
+        <input type="text" id="inputField" name="inputField" placeholder="Type here" required>
+
+        <!-- Button -->
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+
+
+        async function submitForm() {
+            // Get the value from the input field
+            var inputValue = document.getElementById("inputField").value;
+            const data =
+            {
+                num: inputValue
+            }
+            await axios.post('http://localhost:3000/api/send-msg',
+                JSON.stringify(data, null, 2),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'SESSION_TOKEN'
+                    },
+
+                })
+                .then(response => {
+                    console.log('HTTP Request Status:', response.data);
+                })
+                .catch(error => {
+                    console.error('HTTP Request Error:', error.message);
+                });
+
+        }
+
+    </script>
+</body>
+
+</html>
