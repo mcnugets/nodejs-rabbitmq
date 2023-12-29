@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use('/api', route);
-console.log(path.join(__dirname, 'src/public'));
+
 app.use(express.static(path.join(__dirname, 'src/public')));
 
 app.listen(port, () => {

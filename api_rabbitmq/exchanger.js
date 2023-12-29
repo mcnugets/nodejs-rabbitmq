@@ -29,71 +29,40 @@ class rabbit_queue {
     async send_message(data, queue_name) {
         try {
             await this.channel.sendToQueue(queue_name, Buffer.from(JSON.stringify(data)));
+
+            console.log("Message was sent to queue: ", queue_name);
         } catch (err) {
 
         }
     }
-    async receive_message(quque_name) {
-        this.channel.consume(quque_name, (msg) => {
-            if (msg) {
-                console.log(`${Buffer.from(msg.content)}`);
-                callback(msg.content.toString());
-                this.channel.ack(msg);
-            }
+
+    async receive_message(queue_name, messanger) {
+        return await new Promise((resolve, reject) => {
+            this.channel.consume(queue_name, (msg) => {
+                if (msg) {
+
+                    const messageContent = JSON.parse(msg.content.toString());
+                    if (messanger != messageContent.author) {
+                        console.log(`Received Message: ${JSON.stringify(messageContent, null, 2)}`);
+                        this.channel.ack(msg);
+                        resolve(messageContent);
+                    }
+                }
+            }, { noAck: false });
         });
     }
 
     async close() {
-        setTimeout(async function () {
-            await this.channel.close();
-            console.log('Channel connection terminated');
+
+        await this.channel.close();
+        // await this.connection.close();
+        console.log('Channel connection terminated');
 
 
-        }, 500);
-    }
+    };
+
 
 }
-
-
-
-// var Queue = function (name, conf) {
-//     return {
-//         emit: function (data, close = true) {
-//             amqp.connect(`amqp://${conf.server.user}:${conf.server.pass}@${conf.server.host}:${conf.server.port}`, function (err, conn) {
-//                 conn.createChannel(function (err, ch) {
-//                     var msg = JSON.stringify(data);
-
-//                     ch.assertQueue(name, conf.queue);
-//                     ch.sendToQueue(name, new Buffer(msg));
-//                 });
-//                 if (close) {
-//                     setTimeout(function () {
-//                         conn.close();
-//                         process.exit(0)
-//                     }, 500);
-//                 }
-//             });
-//         },
-//         receive: function (callback) {
-//             amqp.connect(`amqp://${conf.server.user}:${conf.server.pass}@${conf.server.host}:${conf.server.port}`, function (err, conn) {
-//                 conn.createChannel(function (err, ch) {
-//                     ch.assertQueue(name, conf.queue);
-//                     console.log(new Date().toString() + ' Queue ' + name + ' initialized');
-//                     ch.consume(name, function (msg) {
-//                         console.log(new Date().toString() + " Received %s", msg.content.toString());
-//                         if (callback) {
-//                             callback(JSON.parse(msg.content.toString()), msg.fields.routingKey)
-//                         }
-//                         if (conf.consumer.noAck === false) {
-//                             ch.ack(msg);
-//                         }
-//                     }, conf.consumer);
-//                 });
-//             });
-//         }
-//     };
-// };
-
 
 
 
