@@ -4,6 +4,10 @@
   ```
   git clone https://github.com/mcnugets/nodejs-rabbitmq.git
   ```
+- Install the dependencies
+  ```
+  npm install
+  ```
   
 
 - Run the docker container for the rabbitmq
