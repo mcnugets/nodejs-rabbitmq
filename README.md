@@ -14,6 +14,10 @@
 url: `localhost:3000`
 ---
 - Go to directory ` provider/ `
+  ```
+  cd ..
+  cd provider
+  ```
 - use the command to start a server
   ```
   npm start
@@ -22,6 +26,10 @@ url: `localhost:3000`
 url: `localhost:300`
 ---
 - Go to directory ` client/ `
+  ```
+  cd ..
+  cd client
+  ```
 - use the command to start a server
   ```
   npm start
